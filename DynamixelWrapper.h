@@ -122,11 +122,6 @@ class DynamixelServo {
 	// int max_position_limit(int32_t);
 	// int min_position_limit(int32_t);
 
-	// Then, followings just calculate and show max values
-	virtual void max_position_limit_deg(float _theta) = 0;
-	virtual void max_position_limit_rad(float _theta) = 0;
-	virtual void min_position_limit_deg(float _theta) = 0;
-	virtual void min_position_limit_rad(float _theta) = 0;
 
 	int torque_enable();
 	int torque_disable();
@@ -148,6 +143,13 @@ class DynamixelServo {
 	int present_position();
 	virtual float present_position_rad() = 0;
 	virtual float present_position_deg() = 0;
+
+	int32_t calc_position(float _theta, float _max, float _unit) {
+		return int32_t(_theta * _max/_unit);
+	}
+	float  calc_position(int32_t _theta, float _max, float _unit) {
+		return float(_theta * _unit/_max);
+	}
 };
 
 
@@ -165,45 +167,22 @@ class Dynamixel_H42P : public DynamixelServo {
 	Dynamixel_H42P(DynamixelNetwork* _net, uint8_t _id):DynamixelServo(_net,_id) {}
 	void showID(void) { cout << "id:" << +id << " H42P\n"; }
 
-	void max_position_limit_deg(float _theta) {
-		int32_t limit = _theta * MAX_POSITION/180.0;
-		cout << "max_position_limit: " << _theta << "[deg], " << limit << "\n";
-	}
-	void max_position_limit_rad(float _theta) {
-		int32_t limit = _theta * MAX_POSITION/M_PI;
-		cout << "max_position_limit: " << _theta << "[rad], " << limit << "\n";
-	}
-
-	void min_position_limit_deg(float _theta) {
-		int32_t limit = _theta * MAX_POSITION/180.0;
-		cout << "max_position_limit: " << _theta << "[deg], " << limit << "\n";
-	}
-	void min_position_limit_rad(float _theta) {
-		int32_t limit = _theta * MAX_POSITION/M_PI;
-		cout << "max_position_limit: " << _theta << "[rad], " << limit << "\n";
-	}
-
-	int goal_position_rad(float _theta) {
-		int32_t goal = _theta * MAX_POSITION/M_PI;
-		return goal_position(goal);
-	}
 	int goal_position_deg(float _theta) {
-		int32_t goal = _theta * MAX_POSITION/180.0;
+		int32_t goal = calc_position(_theta, MAX_POSITION, 180);
 		return goal_position(goal);
 	}
-
+	int goal_position_rad(float _theta) {
+		int32_t goal = calc_position(_theta, MAX_POSITION, M_PI);
+		return goal_position(goal);
+	}
 
 	float present_position_deg() {
 		present_position();
-		float p = DynamixelServo::position;
-		p = p/MAX_POSITION*180.0;
-		return p;
+		return calc_position(DynamixelServo::position, MAX_POSITION, 180);
 	}
 	float present_position_rad() {
 		present_position();
-		float p= DynamixelServo::position;
-		p= p/MAX_POSITION*M_PI;
-		return p;
+		return calc_position(DynamixelServo::position, MAX_POSITION, M_PI);
 	}
 };
 
@@ -221,48 +200,22 @@ class Dynamixel_H54P : public DynamixelServo {
 	Dynamixel_H54P(DynamixelNetwork* _net, uint8_t _id):DynamixelServo(_net,_id) {}
 	void showID(void) { cout << "id:" << +id << " H54P\n"; }
 
-	void max_position_limit_deg(float _theta) {
-		int32_t limit = _theta * MAX_POSITION/180.0;
-		cout << "max_position_limit: " << _theta << "[deg], " << limit << "\n";
-		// return min_position_limit(limit);
-	}
-	void max_position_limit_rad(float _theta) {
-		int32_t limit = _theta * MAX_POSITION/M_PI;
-		cout << "max_position_limit: " << _theta << "[rad], " << limit << "\n";
-		// return min_position_limit(limit);
-	}
-
-	void min_position_limit_deg(float _theta) {
-		int32_t limit = _theta * MAX_POSITION/180.0;
-		cout << "max_position_limit: " << _theta << "[deg], " << limit << "\n";
-		// return min_position_limit(limit);
-	}
-	void min_position_limit_rad(float _theta) {
-		int32_t limit = _theta * MAX_POSITION/M_PI;
-		cout << "max_position_limit: " << _theta << "[rad], " << limit << "\n";
-		// return min_position_limit(limit);
-	}
-
-	int goal_position_rad(float _theta) {
-		int32_t goal = _theta * MAX_POSITION/M_PI;
+	int goal_position_deg(float _theta) {
+		int32_t goal = calc_position(_theta, MAX_POSITION, 180);
 		return goal_position(goal);
 	}
-	int goal_position_deg(float _theta) {
-		int32_t goal = _theta * MAX_POSITION/180.0;
+	int goal_position_rad(float _theta) {
+		int32_t goal = calc_position(_theta, MAX_POSITION, M_PI);
 		return goal_position(goal);
 	}
 
 	float present_position_deg() {
 		present_position();
-		float p = DynamixelServo::position;
-		p = p/MAX_POSITION*180.0;
-		return p;
+		return calc_position(DynamixelServo::position, MAX_POSITION, 180);
 	}
 	float present_position_rad() {
 		present_position();
-		float p= DynamixelServo::position;
-		p= p/MAX_POSITION*M_PI;
-		return p;
+		return calc_position(DynamixelServo::position, MAX_POSITION, M_PI);
 	}
 };
 
