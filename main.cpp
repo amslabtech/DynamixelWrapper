@@ -73,13 +73,6 @@ void CCV::run() {
 
 		cout << "Step: " << step << "\n";
 
-
-		if(step == 0) {
-			svo[ROLL ]->goal_position_deg(  0);
-			svo[FORE ]->goal_position_deg(  0);	// calm down
-			svo[REAR ]->goal_position_deg(  0);
-		
-		} 
 		
 		if(step == 1) {
 			svo[ROLL ]->goal_position_deg(  5);	// roll right
