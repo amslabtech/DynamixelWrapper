@@ -144,10 +144,10 @@ class DynamixelServo {
 	virtual float present_position_rad() = 0;
 	virtual float present_position_deg() = 0;
 
-	int32_t calc_position(float _theta, float _max, float _unit) {
+	int32_t convert_position(float _theta, float _max, float _unit) {
 		return int32_t(_theta * _max/_unit);
 	}
-	float  calc_position(int32_t _theta, float _max, float _unit) {
+	float  convert_position(int32_t _theta, float _max, float _unit) {
 		return float(_theta * _unit/_max);
 	}
 };
@@ -168,21 +168,21 @@ class Dynamixel_H42P : public DynamixelServo {
 	void showID(void) { cout << "id:" << +id << " H42P\n"; }
 
 	int goal_position_deg(float _theta) {
-		int32_t goal = calc_position(_theta, MAX_POSITION, 180);
+		int32_t goal = convert_position(_theta, MAX_POSITION, 180);
 		return goal_position(goal);
 	}
 	int goal_position_rad(float _theta) {
-		int32_t goal = calc_position(_theta, MAX_POSITION, M_PI);
+		int32_t goal = convert_position(_theta, MAX_POSITION, M_PI);
 		return goal_position(goal);
 	}
 
 	float present_position_deg() {
 		present_position();
-		return calc_position(DynamixelServo::position, MAX_POSITION, 180);
+		return convert_position(DynamixelServo::position, MAX_POSITION, 180);
 	}
 	float present_position_rad() {
 		present_position();
-		return calc_position(DynamixelServo::position, MAX_POSITION, M_PI);
+		return convert_position(DynamixelServo::position, MAX_POSITION, M_PI);
 	}
 };
 
@@ -201,21 +201,21 @@ class Dynamixel_H54P : public DynamixelServo {
 	void showID(void) { cout << "id:" << +id << " H54P\n"; }
 
 	int goal_position_deg(float _theta) {
-		int32_t goal = calc_position(_theta, MAX_POSITION, 180);
+		int32_t goal = convert_position(_theta, MAX_POSITION, 180);
 		return goal_position(goal);
 	}
 	int goal_position_rad(float _theta) {
-		int32_t goal = calc_position(_theta, MAX_POSITION, M_PI);
+		int32_t goal = convert_position(_theta, MAX_POSITION, M_PI);
 		return goal_position(goal);
 	}
 
 	float present_position_deg() {
 		present_position();
-		return calc_position(DynamixelServo::position, MAX_POSITION, 180);
+		return convert_position(DynamixelServo::position, MAX_POSITION, 180);
 	}
 	float present_position_rad() {
 		present_position();
-		return calc_position(DynamixelServo::position, MAX_POSITION, M_PI);
+		return convert_position(DynamixelServo::position, MAX_POSITION, M_PI);
 	}
 };
 
