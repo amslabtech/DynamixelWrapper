@@ -23,12 +23,13 @@
 #---------------------------------------------------------------------
 
 # *** ENTER THE TARGET NAME HERE ***
-TARGET      = DynamixelTest
+TARGET      = ./example/ccvtest
 
 # important directories used by assorted rules and other variables
 #DIR_DXL    = ../../../..
 DIR_DXL		= /home/parallels/DynamixelSDK/c++
 DIR_OBJS	= .objects
+DIR_EXAMPLES= ./example
 
 # compiler options
 CC          = gcc
@@ -43,13 +44,14 @@ FORMAT      = -m64
 # Core components (all of these are likely going to be needed)
 #---------------------------------------------------------------------
 INCLUDES   += -I$(DIR_DXL)/include/dynamixel_sdk
+INCLUDES   += -I.
 LIBRARIES  += -ldxl_x64_cpp
 LIBRARIES  += -lrt
 
 #---------------------------------------------------------------------
 # Files
 #---------------------------------------------------------------------
-SOURCES = DynamixelWrapper.cpp main.cpp\
+SOURCES = DynamixelWrapper.cpp $(DIR_EXAMPLES)/ccvtest.cpp
     # *** OTHER SOURCES GO HERE ***
 
 OBJECTS  = $(addsuffix .o,$(addprefix $(DIR_OBJS)/,$(basename $(notdir $(SOURCES)))))
@@ -74,6 +76,9 @@ $(DIR_OBJS)/%.o: %.c
 	$(CC) $(CCFLAGS) -c $? -o $@
 
 $(DIR_OBJS)/%.o: %.cpp
+	$(CX) $(CXFLAGS) -c $? -o $@
+
+$(DIR_OBJS)/%.o: $(DIR_EXAMPLES)/%.cpp
 	$(CX) $(CXFLAGS) -c $? -o $@
 
 #---------------------------------------------------------------------
