@@ -1,10 +1,10 @@
 //
 //	main.cpp
 //
-#include "DynamixelWrapper.h"
 #include <iostream>
 #include <stdlib.h>
 #include <unistd.h>
+#include <DynamixelWrapper.h>
 using namespace std;
 using namespace dynamixel;
 
