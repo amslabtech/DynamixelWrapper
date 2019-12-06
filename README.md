@@ -31,6 +31,10 @@ Dynamixel のサーボモータ（現状では Pro+ のみ対応）のためのC
 
 # ライブラリのビルド
 
+
+CMakeLists.txt を編集して，プロジェクトパスを正しく設定する．
+事前に DynamixelSdk をインストールしておく必要がある．
+
 ```
 cd DynamixelWrapper
 mkdir build
