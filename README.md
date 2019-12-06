@@ -33,13 +33,9 @@ Dynamixel のサーボモータ（現状では Pro+ のみ対応）のためのC
 
 ```
 cd DynamixelWrapper
-
 mkdir build
-
 cd build
-
 cmake ..
-
 make
 ```
 
