@@ -238,6 +238,12 @@ class DynamixelRobotSystem {
 		}
 	}
 	virtual void run() = 0;
+	void goal_position_rad(int _svo , float _position) {
+		svo[_svo]->goal_position_rad(_position);
+	}
+	void goal_position_deg(int _svo , float _position) {
+		svo[_svo]->goal_position_deg(_position);
+	}
 };
 
 #endif	// _DYNAMIXELWRAPPER_H
