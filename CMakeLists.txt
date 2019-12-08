@@ -7,7 +7,7 @@ set(COMMON_SOURCES src/DynamixelWrapper.cpp)
 set(DXL_INC_DIR /home/parallels/dev/DynamixelSDK/c++/include/dynamixel_sdk 
 				/home/pi/dev/DynamixelSDK/c++/include/dynamixel_sdk)
 
-include_directories(${DXL_INC_DIR} ./src)
+include_directories(${DXL_INC_DIR} ./src ./include)
 
 add_executable(ccvtest ${COMMON_SOURCES} example/ccvtest.cpp)
 add_library(dxl_wrapper ${COMMON_SOURCES} src/DynamixelWrapper.cpp)
