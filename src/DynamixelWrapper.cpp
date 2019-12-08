@@ -2,7 +2,7 @@
 //	DynamixelWrapper.cpp
 //
 //#include "dynamixel_sdk.h"
-#include "DynamixelWrapper.h"
+#include "DynamixelWrapper.hpp"
 #include <iostream>
 using namespace std;
 using namespace dynamixel;

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <unistd.h>
-#include <DynamixelWrapper.h>
+#include <DynamixelWrapper.hpp>
 using namespace std;
 using namespace dynamixel;
 
