@@ -16,14 +16,14 @@ add_library(dxl_wrapper ${COMMON_SOURCES} src/DynamixelWrapper.cpp)
 target_link_libraries(ccvtest dxl_x64_cpp rt)	# Regular PC
 #target_link_libraries(ccvtest dxl_sbc_cpp rt)	# Raspberry Pi
 
-INSTALL(
-    TARGETS ccvtest
-    EXPORT ${PROJECT_NAME}-export
-    RUNTIME DESTINATION bin/${PROJECT_NAME}
+
+INSTALL (
+	FILES include/DynamixelWrapper.hpp
+	DESTINATION /usr/local/include
 )
 
-INSTALL(
-    EXPORT ${PROJECT_NAME}-export
-    FILE ${PROJECT_NAME}-config.cmake
-    DESTINATION share/cmake/${PROJECT_NAME}
+INSTALL (
+	FILES build/libdxl_wrapper.a
+	DESTINATION /usr/local/lib
 )
+
