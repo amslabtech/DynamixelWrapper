@@ -41,12 +41,13 @@ mkdir build
 cd build
 cmake ..
 make
+sudo make install
 ```
 
 
 これにより，
 
-- dxl_wrapper.a ... ラッパーライブラリ
+- /usr/local/lib/dxl_wrapper.a ... ラッパーライブラリ
 - ccvtest  ...  SQ2-CCVに合わせたサーボシステムのデモプログラム
 
 が作成される．
