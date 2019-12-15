@@ -16,6 +16,8 @@ class CCV : public DynamixelRobotSystem {
 	enum INDEX { ROLL=0, FORE, REAR, STEER };
 	void setup();
 	void run();
+	CCV(DynamixelNetwork* _dnet):
+		DynamixelRobotSystem(_dnet){}
 };
 
 void CCV::setup() {
@@ -54,18 +56,19 @@ void CCV::run() {
 	svo[REAR ]->torque_enable();
 	svo[STEER]->torque_enable();
 
-	svo[ROLL ]->goal_position_deg(0);	// reset to the home position
-	svo[FORE ]->goal_position_deg(0);
-	svo[REAR ]->goal_position_deg(0);
-	svo[STEER]->goal_position_deg(0);
-	usleep(3000000);
+	float goal[] = { 0, 0, 0, 0 };
+	sync_goal_position_deg(goal);
+	usleep(3000*1000);
 
-	svo[FORE ]->goal_position_deg( 10);	// lift up
-	svo[REAR ]->goal_position_deg( 10);
-	usleep(3000000);
-	svo[FORE ]->goal_position_deg( 0);	// calm down
-	svo[REAR ]->goal_position_deg( 0);
-	usleep(1000000);
+	goal[FORE] = 10;	// lift up
+	goal[REAR] = 10;	// lift up
+	sync_goal_position_deg(goal);
+	usleep(3000*1000);
+
+	goal[FORE] = 0;		// calm down
+	goal[REAR] = 0;		// calm down
+	sync_goal_position_deg(goal);
+	usleep(3000*1000);
 
 
 	for(int step=0; step<7; step++) {
@@ -144,7 +147,7 @@ int main()
 		("/dev/ttyUSB0", DynamixelNetwork::PROTOCOL2, DynamixelNetwork::BAUDRATE_1M);
 	DynamixelNetwork* dnet = DynamixelNetwork::getNetworkPointer();
 	
-	CCV* ccv = new CCV;
+	CCV* ccv = new CCV(dnet);
 	ccv->add(new Dynamixel_H54P(dnet, CCV::DXLID_ROLL));
 	ccv->add(new Dynamixel_H54P(dnet, CCV::DXLID_FORE));
 	ccv->add(new Dynamixel_H54P(dnet, CCV::DXLID_REAR));

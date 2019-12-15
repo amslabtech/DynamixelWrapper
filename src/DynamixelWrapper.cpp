@@ -140,9 +140,26 @@ void DynamixelNetwork::destroy() {
 DynamixelNetwork::DynamixelNetwork(char const * const dev, PROTOCOL p, BAUDRATE_ID b):
 	portHandler ( PortHandler::getPortHandler(dev) ),
 	packetHandler ( PacketHandler::getPacketHandler(p) ),
+	groupSyncWrite (
+		new dynamixel::GroupSyncWrite
+			(portHandler, packetHandler, ADDR_GOAL_POSITION, LEN_GOAL_POSITION) ),
+	groupSyncRead (
+		new dynamixel::GroupSyncRead
+			(portHandler, packetHandler, ADDR_PRESENT_POSITION, LEN_PRESENT_POSITION) ),
 	comm_result(COMM_TX_FAIL)
 {
 	cout << "Protocol " << p << "\n";
+
+
+#if 0
+  // Initialize GroupSyncWrite instance
+  dynamixel::GroupSyncWrite
+	groupSyncWrite(portHandler, packetHandler, ADDR_PRO_GOAL_POSITION, LEN_PRO_GOAL_POSITION);
+
+  // Initialize Groupsyncread instance for Present Position
+  dynamixel::GroupSyncRead
+	groupSyncRead(portHandler, packetHandler, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
+#endif
 
 	cout << "Opening device: " << dev <<"\n";
 	if( portHandler->openPort() ) {
@@ -176,23 +193,35 @@ class CCV : public DynamixelRobotSystem {
 };
 
 void CCV::setup() {
+	svo[ROLL ]->profile_acceleration(1800.0F);
+	svo[FORE ]->profile_acceleration(1800.0F);
+	svo[REAR ]->profile_acceleration(1800.0F);
 	svo[STEER]->profile_acceleration(1800.0F);
 //	svo[STEER]->position_p_gain(25);
 }
 
 void CCV::run() {
-	svo[STEER]->torque_enable();
-	svo[STEER]->goal_position_deg(0);
+	svo[ROLL ]->torque_enable();
+	svo[FORE ]->torque_enable();
+	svo[REAR ]->torque_enable();
+//	svo[STEER]->goal_position_deg(0);
+
+	float goal[] = { 0, 0, 0, 0 };
+	dnet->sync_goal_position_deg(goal);
+
 	usleep(1000000);
 
 	while(1) {
-		float theta = float(rand()%4800)/100 -24;
+		goal[ROLL ] = float(rand()%1400)/100 - 7;
+		goal[FORE ] = float(rand()%2000)/100 -10;
+		goal[REAR ] =-float(rand()%2000)/100 -10;
+		goal[STEER] = float(rand()%4800)/100 -24;
 
-		cout << "Goal position: " << theta << "\n";
-		svo[STEER]->goal_position_deg(theta);
-		svo[STEER]->led(rand()%256,rand()%256,rand()%256);
+		dnet->sync_goal_position_deg(goal);
+//		svo[STEER]->goal_position_deg(theta);
+//		svo[STEER]->led(rand()%256,rand()%256,rand()%256);
 
-		usleep(500000);
+		usleep(10*1000);
 	}
 }
 
@@ -202,7 +231,7 @@ int main()
 		("/dev/ttyUSB0", DynamixelNetwork::PROTOCOL2, DynamixelNetwork::BAUDRATE_1M);
 	DynamixelNetwork* dnet = DynamixelNetwork::getNetworkPointer();
 	
-	CCV* ccv = new CCV;
+	CCV* ccv = new CCV(dnet);
 	ccv->add(new Dynamixel_H54P(dnet, CCV::DXLID_ROLL));
 	ccv->add(new Dynamixel_H54P(dnet, CCV::DXLID_FORE));
 	ccv->add(new Dynamixel_H54P(dnet, CCV::DXLID_REAR));
