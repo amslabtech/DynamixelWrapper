@@ -327,11 +327,29 @@ class DynamixelRobotSystem {
 		}
 	}
 	virtual void run() = 0;
+	void torque_enable() {
+		for(int i=0; i<size; i++)
+			svo[i]->torque_enable();
+	}
+	void torque_disable() {
+		for(int i=0; i<size; i++)
+			svo[i]->torque_disable();
+	}
+
 	void goal_position_rad(int _svo , float _position) {
 		svo[_svo]->goal_position_rad(_position);
 	}
+	void goal_position_rad(float _positions[]) {
+		for(int i=0; i<size; i++)
+			svo[i]->goal_position_rad(_positions[i]);
+	}
+
 	void goal_position_deg(int _svo , float _position) {
 		svo[_svo]->goal_position_deg(_position);
+	}
+	void goal_position_deg(float _positions[]) {
+		for(int i=0; i<size; i++)
+			svo[i]->goal_position_deg(_positions[i]);
 	}
 
 
@@ -366,6 +384,16 @@ class DynamixelRobotSystem {
 			_positions[i] = svo[i]->sync_present_position_deg();
 		}
 		mutex_servo.unlock();
+	}
+	void profile_acceleration(float _accel[]) {
+		for(int i=0; i<size; i++) {
+			svo[i]->profile_acceleration(_accel[i]);
+		}
+	}
+	void profile_acceleration(float _accel) {
+		for(int i=0; i<size; i++) {
+			svo[i]->profile_acceleration(_accel);
+		}
 	}
 };
 
